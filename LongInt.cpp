@@ -1,45 +1,200 @@
 #include <iostream>
+#include <stdlib.h>
+
 #include "LongInt.h"
 #include "List.h"
+
+#include <stdio.h>      /* printf, fgets */
+#include <stdlib.h>     // atol
 
 using namespace std;
 
 int main(){
-	long num = 123;
-	List myList;
-	myList.createNode(num);
-	myList.traverse();
+	string str("1234567890");
+	LongInt myLong;
+	myLong.Initialize(str);
+	
+
+	char temp;
+	cin >> temp;
 	return 0;
 }
 
+
 //Initializes the Long Integer using a String S, which contains a number. S’scharacters are guaranteed to be digits, except the first character which may be a minus character.
 void LongInt::Initialize(string S){
-	long num = 123;
-	cout<<"This works so far";
-	return;
+	List myList;
+	//initialize our sign private var to the first element of the string
+	LongInt::sign = S[0];
+	S.erase(S.begin());
+	//traverse through string without the sign char
+  	for (unsigned i=0; i<S.length(); ++i)
+  	{
+		//using i as counter
+		if(i%4==0){
+			//a check to make sure S.length()-i doesn't go out of bounds
+			if(S.length()-i < 4){
+				//grabbing the last 4 digits from the right
+				string myString = S.substr(0,S.length()-i);
+				//stripping the leading zero's
+				for(string::size_type i=0; i<myString.size(); ++i){
+					if(myString[i]!='0'){
+						myString.replace(myString.begin(), myString.begin()+i," ");
+						break;
+					}
+				}
+				//converting string to long value
+				long value = atol(myString.c_str());
+				//insert into list
+				myList.insertLeft(value);
+				return;
+			}
+			//when there are 4 digits from the right, grab those 4 digits
+			else{
+                int index = (S.length()-i)-4;
+            	string myString = S.substr(index,4);
+            	//stripping the leading zero's
+				for(string::size_type i=0; i<myString.size(); ++i){
+					if(myString[i]!='0'){
+						myString.replace(myString.begin(), myString.begin()+i," ");
+						break;
+					}
+				}
+            	long value = atol(myString.c_str());
+            	myList.insertLeft(value);
+			}
+		}
+  	}
+  	//Assigning the newly created List to the private var list
+  	LongInt::list = myList;
+  	return;
 }
+
 //Get and set the sign of the Long Integer
-void LongInt::getSign(){
+return LongInt::getSign(){
+	return this.sign;
 }
 void LongInt::setSign(char S){
+	LongInt::sign = S;
 }
 // Returns the total number of digits in the Long Integer
 int LongInt::getDigitCount(){
+	node *tmp;
+	int digits=0;
+	tmp = myList.getFirst();
+	//count digits of each node
+	while(tmp!=NULL){
+		number = tmp->data;
+		//TODO: handle the numbers with the leading zero's stripped. they must still be accounted for.
+		long num = number;
+		while(num>0){
+			num /= 10;
+			digits++;
+		}
+		tmp = myList.nextRight(tmp);
+	}
+	return digits;
 }
 // Prints the Long Integer to standard output. The output format is defined as a sequence of digit characters. The first character may be a minus.
 void LongInt::Print(){
+	List a = this.list;
+	a.traverse();
 }
 //Determines if the Long Integer is greater than, less than, or equal to Q, respectively
 bool LongInt::greaterThan(LongInt Q){
+	List a = this.list;
+	List b = Q.list;
+	
+	if(getSign() == 'p' && Q.getSign() == 'n'){
+		return true;
+	}
+	if(getSign() == 'n' && Q.getSign() == 'p'){
+		return false;
+	}
+	if(digits() > Q.digits()){
+		return true;
+	}
+	if(Q.digits() > digits()){
+		return false;
+	}
+	if(getSign() == 'p' && Q.getSign() == 'p'){
+		node *tmpa = a.getFirst();
+		node *tmpb = b.getFirst();
+		//iterate through list a and b
+		while(tmpa!=NULL && tmpb!=NULL){
+			if(tmpa->data < tmpb->data){
+				return true;
+			}
+			if(tmpa->data > tmpb->data){
+				return false;
+			}
+			tmpa = tmpa->next;
+			tmpb = tmpb->next;
+		}
+		return false;
+	}
 };
 bool LongInt::lessThan(LongInt Q){
+    List a = this.list;
+	List b = q.list;
+
+	if(getSign() == 'p' && Q.getSign() == 'n'){
+		return false;
+	}
+	if(getSign() == 'n' && Q.getSign() == 'p'){
+		return true;
+	}
+	if(digits() > Q.digits()){
+		return false;
+	}
+	if(Q.digits() > digits()){
+		return true;
+	}
+	if(getSign() == 'p' && Q.getSign() == 'p'){
+		node *tmpa = a.getFirst();
+		node *tmpb = b.getFirst();
+		//iterate through list a and b
+		while(tmpa!=NULL && tmpb!=NULL){
+			if(tmpa->data < tmpb->data){
+				return true;
+			}
+			if(tmpa->data > tmpb->data){
+				return false;
+			}
+			tmpa = tmpa->next;
+			tmpb = tmpb->next;
+		}
+		return false;
+
+	}
 };
 bool LongInt::equalTo(LongInt Q){
+    List a = this.list;
+	List b = Q.list;
+
+	if(getSign() != Q.getSign()){
+		return false;
+	}
+	if(digits() != Q.digits()){
+		return false;
+	}
+	if(getSign() == 'p' && Q.getSign() == 'p'){
+		node *tmpa = a.getFirst();
+		node *tmpb = b.getFirst();
+		while(tmpa!=NULL && tmpb!=NULL){
+			if(tmpa->data != tmpb->data){
+				return false;
+			}
+			tmpa = tmpa->next;
+			tmpb = tmpb->next;
+		}
+		return true;
+	}
 };
 //Adds Q to the Long Integer and returns the result
 LongInt LongInt::add(LongInt Q){
 	 // TODO: Handle addition when signs are different
-
+	/*
 	 node* r1, *r2;
 
 	 List a = this.list;
@@ -68,6 +223,7 @@ LongInt LongInt::add(LongInt Q){
 	 // TODO: finish adding the remaining digits from either this LongInt or Q, plus any overflow
 
 	 return result;
+	 */
 };
  //Subtracts Q from the Long Integer and returns the result
 LongInt LongInt::subtract(LongInt Q){

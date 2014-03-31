@@ -50,12 +50,10 @@ node *List::getFirst(){
 node *List::nextRight(node *n){
 	node *tmp = Head;
 	
-	/*
 	if(tmp == NULL){
 		cout << "empty List";
-		return;
+		return NULL;
 	}
-	*/
 
 	while(tmp->next != NULL){
 		//if next node exists check if curr node is n
@@ -76,12 +74,12 @@ node *List::nextRight(node *n){
 //returns node to the left of n
 node *List::nextLeft(node *n){
 	node *tmp = Tail;
-	/*
+ /*
 	if(tmp == NULL){
-		cout<<"Empty List";
+  cout<<"Empty List";
 		return;
 	}
-	*/
+ */
 	while(tmp->prev != NULL){
 		//if prev node exists check if curr node is n
 		if(n->data == tmp->data){
@@ -101,6 +99,14 @@ node *List::nextLeft(node *n){
 
 //inserts node with value v after rightmost n
 void List::insertRight(long v){
+	if(Tail==NULL){
+		node *x = new node;
+		x->data=v;
+		x->next=NULL;
+		x->prev=NULL;
+		Head = x;
+		Tail = x;
+	}
 	node *last = getLast(); //tail node
 	//new node with value v as data
 	node *tmp = new node;
@@ -112,6 +118,14 @@ void List::insertRight(long v){
 }
 //inserts node with value v before leftmost n
 void List::insertLeft(long v){
+    if(Head==NULL){
+		node *x = new node;
+		x->data=v;
+		x->next=NULL;
+		x->prev=NULL;
+		Head = x;
+		Tail = x;
+	}
     node *first = getFirst(); //head node
 	//new node with value v as data
 	node *tmp = new node;

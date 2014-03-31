@@ -9,7 +9,6 @@ struct node {
 	node *prev;
 	node *next;
 	long data;
-	friend class LongInt; //let LongInt class have access to data
 };
 
 
@@ -18,6 +17,7 @@ class List{
 	private:
         node *Head;
 		node *Tail;
+
 	public:
 		List(){
 		}
