@@ -6,10 +6,9 @@ using namespace std;
 class LongInt{
 	private:
 		char sign;
-		List list;
 	public:
-
-		void Initialize(string S); //Initializes the Long Integer using a String S, which contains a number. S’scharacters are guaranteed to be digits, except the first character which may be a minus character.
+		List list;
+		void Initialize(string S); //Initializes the Long Integer using a String S, which contains a number. Sï¿½scharacters are guaranteed to be digits, except the first character which may be a minus character.
 		//Get and set the sign of the Long Integer
 		void getSign();
 		void setSign(char S);
