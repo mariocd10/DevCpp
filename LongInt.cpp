@@ -10,14 +10,7 @@
 using namespace std;
 
 int main(){
-	string str("1234567890");
-	LongInt myLong;
-	myLong.Initialize(str);
-	
 
-	char temp;
-	cin >> temp;
-	return 0;
 }
 
 
