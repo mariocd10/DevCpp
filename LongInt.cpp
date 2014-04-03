@@ -7,56 +7,51 @@
 #include <stdio.h>      /* printf, fgets */
 #include <stdlib.h>     // atol
 
-using namespace std;
-
-int main(){
-
-}
-
 
 //Initializes the Long Integer using a String S, which contains a number. S’scharacters are guaranteed to be digits, except the first character which may be a minus character.
 void LongInt::Initialize(string S){
 	List myList;
 	//initialize our sign private var to the first element of the string
+
 	LongInt::sign = S[0];
 	S.erase(S.begin());
 	//traverse through string without the sign char
-  	for (unsigned i=0; i<S.length(); ++i)
+	int i = S.length();
+	while(i>0)
   	{
-		//using i as counter
-		if(i%4==0){
 			//a check to make sure S.length()-i doesn't go out of bounds
-			if(S.length()-i < 4){
+			if(i>3){
 				//grabbing the last 4 digits from the right
-				string myString = S.substr(0,S.length()-i);
+				string str = S.substr(i-4,4);
 				//stripping the leading zero's
-				for(string::size_type i=0; i<myString.size(); ++i){
-					if(myString[i]!='0'){
-						myString.replace(myString.begin(), myString.begin()+i," ");
-						break;
+				for(int i=0; i<str.length(); ++i){
+					if(str[i]!='0'){
+						int index = str.length()-i;
+						str.substr(i,index);
 					}
 				}
 				//converting string to long value
-				long value = atol(myString.c_str());
+				int value = atoi(str.c_str());
 				//insert into list
 				myList.insertLeft(value);
-				return;
+
+				i=i-4;
 			}
 			//when there are 4 digits from the right, grab those 4 digits
 			else{
-                int index = (S.length()-i)-4;
-            	string myString = S.substr(index,4);
+                string str = S.substr(0,i);
             	//stripping the leading zero's
-				for(string::size_type i=0; i<myString.size(); ++i){
-					if(myString[i]!='0'){
-						myString.replace(myString.begin(), myString.begin()+i," ");
+				for(int i=0; i<str.length(); ++i){
+					if(str[i]!='0'){
+						string lennum = str.length()-i;
+						str.substr(i,lennum);
 						break;
 					}
 				}
-            	long value = atol(myString.c_str());
+            	int value = atoi(str.c_str());
             	myList.insertLeft(value);
+            	break;
 			}
-		}
   	}
   	//Assigning the newly created List to the private var list
   	LongInt::list = myList;
@@ -70,6 +65,7 @@ return LongInt::getSign(){
 void LongInt::setSign(char S){
 	LongInt::sign = S;
 }
+/*
 // Returns the total number of digits in the Long Integer
 int LongInt::getDigitCount(){
 	node *tmp;
@@ -216,8 +212,10 @@ LongInt LongInt::add(LongInt Q){
 	 // TODO: finish adding the remaining digits from either this LongInt or Q, plus any overflow
 
 	 return result;
-	 */
+
 };
+*/
+/*
  //Subtracts Q from the Long Integer and returns the result
 LongInt LongInt::subtract(LongInt Q){
 };
@@ -230,3 +228,4 @@ LongInt LongInt::power(int p){
  //Divides the Long Integer by Q and returns the quotient portion of the result
 LongInt LongInt::divide(LongInt Q){
 };
+*/
