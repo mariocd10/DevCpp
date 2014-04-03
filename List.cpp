@@ -10,8 +10,8 @@ node *Tail = NULL;
 void List::traverse(){
 	node *tmp = Head;
 	
-	while(tmp!= NULL){
-		cout<<"traverse Method: "<<tmp->data<<endl;
+	while(tmp != NULL){
+		cout<<tmp->data<<"-";
 		tmp = tmp->next;
 	}
 	return;
@@ -31,123 +31,70 @@ void List::createNode(int v){
 
 //returns rightmost node (tail)
 node *List::getLast(){
-	if(Tail==NULL){
-		return NULL;
-	}
+
 	return Tail;
 }
 
 //returns the leftmost node (head)
 node *List::getFirst(){
-
-	if(Head==NULL){
+	node *tmp = Head;
+	if(tmp==NULL){
 		cout << "Empty List";
 		return NULL;
 	}
-
-	return Head;
+	return tmp;
 }
 
 //Returns next node to the right of the node N
 node *List::nextRight(node *n){
-	node *tmp = Head;
-	
-	if(tmp == NULL){
-		cout << "empty List";
+	if(n == NULL){
+		cout << "node is null";
 		return NULL;
 	}
-
-	while(tmp->next != NULL){
-		//if next node exists check if curr node is n
-		if(n->data == tmp->data){
-			return tmp->next;
-		}
-		tmp = tmp->next;
-	}
-	
-	if(tmp->data == n->data){
-		return tmp;
+	if(n->next != NULL){
+		//if next node exists
+  		return n->next;
 	}
 	else{
-		cout<<"node not in list";
-		//return;
+		return NULL;
 	}
 }
 //returns node to the left of n
 node *List::nextLeft(node *n){
-	node *tmp = Tail;
-
-	if(tmp == NULL){
-  		cout<<"Empty List";
+	if(n == NULL){
+		cout << "node is null";
 		return NULL;
 	}
-
-	while(tmp->prev != NULL){
-		//if prev node exists check if curr node is n
-		if(n->data == tmp->data){
-			return tmp->prev;
-		}
-		tmp = tmp->prev;
-	}
-	
-	if(tmp->data == n->data){
-		return tmp;
+	if(n->prev != NULL){
+		//if next node exists
+  		return n->prev;
 	}
 	else{
-		cout<<"node not in list";
 		return NULL;
 	}
 }
 
 //inserts node with value v after rightmost n
 void List::insertRight(int v){
-	
-	if(Tail==NULL){
-		node *x = new node;
-		x->data=v;
-		x->next=NULL;
-		x->prev=NULL;
-		Head = x;
-		Tail = x;
-	}
-	else{
-        node *t = Tail;
-		//new node with value v as data
-		node *tmp = new node;
-		t->next = tmp;
-		tmp->data = v;
-		tmp->next = NULL;
-		tmp->prev = t;
-		Tail = tmp;
-	}
-	return;
+	node *last = Tail; //tail node
+	//new node with value v as data
+	node *tmp = new node;
+	last->next = tmp;
+	tmp->data = v;
+	tmp->next = NULL;
+	tmp->prev = last;
+	Tail = tmp;
 }
 //inserts node with value v before leftmost n
 void List::insertLeft(int v){
-	
-    if(List::Head==NULL){
-		node *x = new node;
-		x->data=v;
-		x->next=NULL;
-		x->prev=NULL;
-		List::Head = x;
-		List::Tail = x;
-		//cout<<"Node has been inserted "<<endl;
-	}
-	else{
-        node *h = List::Head;
-		//new node with value v as data
-		node *tmp = new node;
-		h->prev = tmp;
-		tmp->data = v;
-		tmp->prev = NULL;
-		tmp->next = h;
-		Head = tmp;
-		cout<<"Node has been inserted: "<<endl;
-	}
-	
-	
-	return;
+	node *first = Head;
+	//create new node with v as data
+	node *tmp = new node;
+	first->prev = tmp;
+	tmp->data = v;
+	tmp->prev = NULL;
+	tmp->next = first;
+	Head = tmp;
 }
 //returns bool if node n is first
 bool List::isFirst(node *n){

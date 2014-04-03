@@ -9,6 +9,13 @@ struct node {
 	node *prev;
 	node *next;
 	long data;
+	
+	node()
+	{
+        prev = NULL;
+        next = NULL;
+        data = 0;
+    }
 };
 
 
@@ -19,7 +26,8 @@ class List{
 		node *Tail;
 
 	public:
-		List(){cout<<"List Obj Made"<<endl;}
+		List(){
+		}
 		void traverse(); //display list
 		void createNode(int v); //create node as head and tail
 		node *getLast(); //returns rightmost node
