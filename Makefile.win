@@ -5,8 +5,8 @@ CPP      = g++.exe
 CC       = gcc.exe
 WINDRES  = windres.exe
 RES      = 
-OBJ      = List.o main.o $(RES)
-LINKOBJ  = List.o main.o $(RES)
+OBJ      = List.o main.o LongInt.o $(RES)
+LINKOBJ  = List.o main.o LongInt.o $(RES)
 LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/lib" -L"C:/Program Files (x86)/Dev-Cpp/lib/gcc" -static-libstdc++ -static-libgcc  
 INCS     = -I"C:/Program Files (x86)/Dev-Cpp/include" 
 CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/include" 
@@ -31,3 +31,6 @@ List.o: List.cpp
 
 main.o: main.cpp
 	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
+
+LongInt.o: LongInt.cpp
+	$(CPP) -c LongInt.cpp -o LongInt.o $(CXXFLAGS)

@@ -26,8 +26,8 @@ class List{
 		node *Tail;
 
 	public:
-		List(){
-		}
+		List(){}
+		~List(){}
 		void traverse(); //display list
 		void createNode(int v); //create node as head and tail
 		node *getLast(); //returns rightmost node

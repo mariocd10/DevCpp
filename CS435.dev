@@ -1,7 +1,7 @@
 [Project]
 FileName=CS435.dev
 Name=CS435
-UnitCount=4
+UnitCount=5
 Type=1
 Ver=1
 ObjFiles=
@@ -87,4 +87,14 @@ ProductName=
 ProductVersion=
 AutoIncBuildNr=0
 SyncProduct=1
+
+[Unit5]
+FileName=LongInt.cpp
+CompileCpp=1
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
