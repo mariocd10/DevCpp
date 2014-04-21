@@ -89,7 +89,7 @@ int main(){
     A.overFlow(v);
     cout<<"New Value of v after overFlow is: "<<v<<endl;
  	//Add
-	
+	/*
  	LongInt E = A.add(D);
 	cout<<"A+D = E: "<<E.Print()<<endl;
 	LongInt F = B.add(C);
@@ -102,14 +102,19 @@ int main(){
 	cout<<"A+E = I: "<<I.Print()<<endl;
 	LongInt J = B.add(G);
 	cout<<"B+G = J: "<<J.Print()<<endl;
+	*/
+	/*
 	LongInt K = A.subtract(D);
 	cout<<"A-D = K: "<<K.Print()<<endl;
+	*/
 	LongInt L = C.subtract(D);
 	cout<<"C-D = L: "<<L.Print()<<endl;
+	/*
 	LongInt M = D.subtract(C);
 	cout<<"D-C = M: "<<M.Print()<<endl;
 	LongInt N = H.subtract(H);
 	cout<<"H-H = N: "<<N.Print()<<endl;
+	*/
 	system("PAUSE");
 	return 0;
 }

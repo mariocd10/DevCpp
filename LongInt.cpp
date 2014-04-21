@@ -671,98 +671,103 @@ LongInt LongInt::subtract(LongInt Q){
 				}
 			}
 		 }
-		 else{
-			int borrow;
-			//if a<b then b-a
-			if(aCount < bCount || (aCount==bCount && f1 < f2)){
-				if(b2->data < a1->data && !a.isFirst(a1) && !b.isFirst(b2)){
-					subValue = (b2->data+10000) - a1->data;
-					borrow=1;
-					c.createNode(subValue);
-				}
-				else{
-					subValue = b2->data - a1->data;
-					borrow=0;
-					c.createNode(subValue);
-				}
-				
-				while(!a.isFirst(a1) && !b.isFirst(b2)){
-					a1 = a.nextLeft(a1);
-					b2 = b.nextLeft(b2);
-					if(b2->data < a1->data){
-						subValue = ((b2->data - borrow) + 10000) - a1->data;
-						borrow = 1;
-						c.insertLeft(subValue);
-					}
-					else{
-						subValue = (b2->data-borrow) - a1->data;
-						borrow=0;
-					}
-				}
-				
-				while(!b.isFirst(b2)){
-					b2= b.nextLeft(b2);
-					subValue = b2->data - borrow;
-					borrow=0;
-					c.insertLeft(subValue);
-				}
-				result.list = c;
-				
-				if(s1){
-					result.sign = false;
-				}
-				else{
-					result.sign = true;
-				}
-				
-				return result;
+	else{
+		//same sign
+		cout<<"same sign"<<endl;
+		int borrow;
+		//if a<b then b-a
+		if(aCount < bCount || (aCount==bCount && f1 < f2)){
+			cout<<"c < d "<<endl;
+			if(b2->data < a1->data && !a.isFirst(a1) && !b.isFirst(b2)){
+				subValue = (b2->data+10000) - a1->data;
+				borrow=1;
+				c.createNode(subValue);
 			}
-			//a>b then a-b
 			else{
-				//TODO: flaw in the if statement
-                if(a1->data > b2->data && !a.isFirst(a1) && !b.isFirst(b2)){
-					subValue = (a1->data+10000) - b2->data;
-					borrow=1;
-					c.createNode(subValue);
-				}
-				else{
-					subValue = a1->data - b2->data;
-					borrow=0;
-					c.createNode(subValue);
-				}
-
-				while(!a.isFirst(a1) && !b.isFirst(b2)){
-					a1 = a.nextLeft(a1);
-					b2 = b.nextLeft(b2);
-					if(a1->data < b2->data){
-						subValue = ((a1->data - borrow) + 10000) - b2->data;
-						borrow = 1;
-						c.insertLeft(subValue);
-					}
-					else{
-						subValue = (a1->data-borrow) - b2->data;
-						borrow=0;
-					}
-				}
-
-				while(!a.isFirst(a1)){
-					a1= a.nextLeft(a1);
-					subValue = a1->data - borrow;
-					borrow=0;
+				subValue = b2->data - a1->data;
+				borrow=0;
+				c.createNode(subValue);
+			}
+			
+			while(!a.isFirst(a1) && !b.isFirst(b2)){
+				a1 = a.nextLeft(a1);
+				b2 = b.nextLeft(b2);
+				if(b2->data < a1->data){
+					subValue = ((b2->data - borrow) + 10000) - a1->data;
+					borrow = 1;
 					c.insertLeft(subValue);
 				}
-				result.list = c;
+				else{
+					subValue = (b2->data-borrow) - a1->data;
+					cout<<subValue<<endl;
+					c.insertLeft(subValue);
+					borrow=0;
+				}
+			}
+			
+			while(!b.isFirst(b2)){
+				b2= b.nextLeft(b2);
+				subValue = b2->data - borrow;
+				borrow=0;
+				c.insertLeft(subValue);
+			}
+			result.list = c;
+			
+			if(s1){
+				result.sign = false;
+			}
+			else{
+				result.sign = true;
+			}
+			
+			return result;
+		}
+		//a>b then a-b
+		else{
+            if(a1->data > b2->data && !a.isFirst(a1) && !b.isFirst(b2)){
+				subValue = (a1->data+10000) - b2->data;
+				borrow=1;
+				c.createNode(subValue);
+			}
+			else{
+				subValue = a1->data - b2->data;
+				borrow=0;
+				c.createNode(subValue);
+			}
 
-				if(!s1){
-					result.sign = false;
+			while(!a.isFirst(a1) && !b.isFirst(b2)){
+				a1 = a.nextLeft(a1);
+				b2 = b.nextLeft(b2);
+				if(a1->data < b2->data){
+					subValue = ((a1->data - borrow) + 10000) - b2->data;
+					borrow = 1;
+					c.insertLeft(subValue);
 				}
 				else{
-					result.sign = true;
+					subValue = (a1->data-borrow) - b2->data;
+					c.insertLeft(subValue);
+					borrow=0;
 				}
-
-				return result;
 			}
-		 }
+
+			while(!a.isFirst(a1)){
+				a1= a.nextLeft(a1);
+				subValue = a1->data - borrow;
+				borrow=0;
+				c.insertLeft(subValue);
+			}
+			result.list = c;
+
+			if(!s1){
+				result.sign = false;
+			}
+			else{
+				result.sign = true;
+			}
+
+			return result;
+		}
+	}
 };
 /*
 // Multiplies the Long Integer by Q and returns the result
