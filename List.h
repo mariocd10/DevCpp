@@ -28,6 +28,7 @@ class List{
 	public:
 		List(){}
 		~List(){}
+		void remove(node *n);
 		void traverse(); //display list
 		void createNode(int v); //create node as head and tail
 		node *getLast(); //returns rightmost node

@@ -18,6 +18,13 @@ void List::traverse(){
 
 }
 
+//remove
+void List::remove(node *n){
+	if(n == Head){
+		Head = n->next;
+	}	
+	return;
+}
 //create first node
 void List::createNode(int v){
 	node *n = new node;
@@ -31,7 +38,11 @@ void List::createNode(int v){
 
 //returns rightmost node (tail)
 node *List::getLast(){
-
+	node *tmp = Tail;
+	if(tmp==NULL){
+		cout<<"Tail pointing to NULL";
+		return NULL;
+	}
 	return Tail;
 }
 
@@ -39,7 +50,7 @@ node *List::getLast(){
 node *List::getFirst(){
 	node *tmp = Head;
 	if(tmp==NULL){
-		cout << "Empty List";
+		cout << "Head pointing to NULL";
 		return NULL;
 	}
 	return tmp;
