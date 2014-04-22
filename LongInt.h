@@ -10,6 +10,7 @@ class LongInt{
 		bool sign;
 		void stripz(string s);
 		int digits(int t);
+		bool greater(LongInt Q);
 		List list;
 	public:
 		

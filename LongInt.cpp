@@ -110,6 +110,8 @@ string LongInt::Print(){
 	//get List and first node
 	List a = LongInt::list;
 	node *tmp = a.getFirst();
+	int len = getDigitCount();
+	
 	//loop through list
 	while(tmp!=NULL){
 		//convert int to char array
@@ -143,7 +145,7 @@ string LongInt::Print(){
 		tmp = a.nextRight(tmp);
 
 	}
-	if(LongInt::sign==false){
+	if(sign==false){
 		total.insert(0,"-");
 	}
 	return total;
@@ -161,6 +163,7 @@ bool LongInt::greaterThan(LongInt Q){
 	if(!curr && other){
 		return false;
 	}
+	
 	if(currDigits > otherDigits){
 		return true;
 	}
@@ -261,6 +264,53 @@ bool LongInt::lessThan(LongInt Q){
 	
 };
 
+bool LongInt::greater(LongInt Q){
+	int currDigits = getDigitCount();
+	int otherDigits = Q.getDigitCount();
+	if(currDigits > otherDigits){
+		return true;
+	}
+	if(otherDigits > currDigits){
+		return false;
+	}
+	if(currDigits == otherDigits){
+		List currList = list;
+		List otherList = Q.list;
+		node *tmpc = currList.getFirst();
+		node *tmpo = otherList.getFirst();
+		//iterate through list a and b
+		while(tmpc!=NULL && tmpo!=NULL){
+			if(tmpc->data < tmpo->data){
+				return false;
+			}
+			if(tmpc->data > tmpo->data){
+				return true;
+			}
+			tmpc = tmpc->next;
+			tmpo = tmpo->next;
+		}
+		return false;
+	}
+	if(currDigits == otherDigits){
+        List currList = LongInt::list;
+		List otherList = Q.list;
+		node *tmpc = currList.getFirst();
+		node *tmpo = otherList.getFirst();
+		//iterate through list a and b
+		while(tmpc!=NULL && tmpo!=NULL){
+			if(tmpc->data < tmpo->data){
+				return true;
+			}
+			if(tmpc->data > tmpo->data){
+				return false;
+			}
+			tmpc = tmpc->next;
+			tmpo = tmpo->next;
+		}
+		return false;
+	}
+}
+
 bool LongInt::equalTo(LongInt Q){
     bool curr = getSign();
 	bool other = Q.getSign();
@@ -345,7 +395,7 @@ int LongInt::digits(int t){
 
 LongInt LongInt::add(LongInt Q){
 	 int addValue, borrow;
-	 node* a1, *b2, *f1, *f2;
+	 node* a1, *b2;
 	 List a = list;
 	 List b = Q.list;
 	 //check if a > q
@@ -354,9 +404,6 @@ LongInt LongInt::add(LongInt Q){
 	 //get sign
 	 bool s1 = getSign();
 	 bool s2 = Q.getSign();
-	 //get first nodes
-	 f1 = a.getFirst();
-	 f2 = b.getFirst();
 	 //get last nodes
 	 a1 = a.getLast();
 	 b2 = b.getLast();
@@ -366,8 +413,14 @@ LongInt LongInt::add(LongInt Q){
 	
 	//check if different signs
 	if(s1!=s2){
+		if(equalTo(Q)){
+			c.createNode(0);
+			result.list = c;
+			result.sign = true;
+			return result;
+		}
 		//check if lena>lenb or if equal then check first node a > first node b
-		if(aCount> bCount || (aCount==bCount && f1 > f2)){//if so then a-b
+		if(greater(Q)){//if so then a-b
 		    //check if we need to borrow first node
 			if(a1->data < b2->data && !a.isFirst(a1) && !b.isFirst(b2)){
 				addValue = (a1->data + 10000) - b2->data;
@@ -413,7 +466,7 @@ LongInt LongInt::add(LongInt Q){
 			return result;
 		}
 		//check if lena<lenb or if equal then check first node a < first node b
-		else if(aCount < bCount || (aCount==bCount && f1 < f2)){//if so then b-a
+		else if(!greater(Q)){//if so then b
 		    if(b2->data < a1->data && !a.isFirst(a1) && !b.isFirst(b2)){
 				addValue = (b2->data + 10000) - a1->data;
 				borrow = 1;
@@ -547,8 +600,8 @@ LongInt LongInt::add(LongInt Q){
 				}
 				else{
 					result.sign;
-					return result;
 				}
+				return result;
 				
 			}
 			else{
@@ -559,6 +612,7 @@ LongInt LongInt::add(LongInt Q){
 				else{
 					result.sign = false;
 				}
+				return result;
 			}
 		}
 	}
@@ -673,11 +727,16 @@ LongInt LongInt::subtract(LongInt Q){
 		 }
 	else{
 		//same sign
-		cout<<"same sign"<<endl;
 		int borrow;
+		
+		if(equalTo(Q)){
+			c.createNode(0);
+			result.list = c;
+			result.sign = true;
+			return result;
+		}
 		//if a<b then b-a
-		if(aCount < bCount || (aCount==bCount && f1 < f2)){
-			cout<<"c < d "<<endl;
+		if(!greater(Q)){
 			if(b2->data < a1->data && !a.isFirst(a1) && !b.isFirst(b2)){
 				subValue = (b2->data+10000) - a1->data;
 				borrow=1;
@@ -699,7 +758,6 @@ LongInt LongInt::subtract(LongInt Q){
 				}
 				else{
 					subValue = (b2->data-borrow) - a1->data;
-					cout<<subValue<<endl;
 					c.insertLeft(subValue);
 					borrow=0;
 				}
@@ -710,6 +768,14 @@ LongInt LongInt::subtract(LongInt Q){
 				subValue = b2->data - borrow;
 				borrow=0;
 				c.insertLeft(subValue);
+			}
+			//remove any leading nodes that are zero's
+			node *tmpc, *tmpd;
+			tmpc = c.getFirst();
+			while(tmpc->data==0){
+				tmpd = c.nextRight(tmpc);
+				c.remove(tmpc);
+				tmpc = tmpd;
 			}
 			result.list = c;
 			
@@ -724,7 +790,7 @@ LongInt LongInt::subtract(LongInt Q){
 		}
 		//a>b then a-b
 		else{
-            if(a1->data > b2->data && !a.isFirst(a1) && !b.isFirst(b2)){
+			if(a1->data < b2->data && !a.isFirst(a1) && !b.isFirst(b2)){
 				subValue = (a1->data+10000) - b2->data;
 				borrow=1;
 				c.createNode(subValue);
@@ -734,11 +800,11 @@ LongInt LongInt::subtract(LongInt Q){
 				borrow=0;
 				c.createNode(subValue);
 			}
-
+			
 			while(!a.isFirst(a1) && !b.isFirst(b2)){
 				a1 = a.nextLeft(a1);
 				b2 = b.nextLeft(b2);
-				if(a1->data < b2->data){
+				if(b2->data < a1->data){
 					subValue = ((a1->data - borrow) + 10000) - b2->data;
 					borrow = 1;
 					c.insertLeft(subValue);
@@ -749,30 +815,141 @@ LongInt LongInt::subtract(LongInt Q){
 					borrow=0;
 				}
 			}
-
+			
 			while(!a.isFirst(a1)){
 				a1= a.nextLeft(a1);
 				subValue = a1->data - borrow;
 				borrow=0;
 				c.insertLeft(subValue);
 			}
-			result.list = c;
-
-			if(!s1){
-				result.sign = false;
+			
+			node *tmpc, *tmpd;
+			tmpc = c.getFirst();
+			while(tmpc->data==0){
+				tmpd = c.nextRight(tmpc);
+				c.remove(tmpc);
+				tmpc = tmpd;
 			}
-			else{
+			
+			result.list = c;
+			
+			if(s1){
 				result.sign = true;
 			}
-
+			else{
+				result.sign = false;
+			}
+			
 			return result;
 		}
 	}
 };
-/*
+
 // Multiplies the Long Integer by Q and returns the result
 LongInt LongInt::multiply(LongInt Q){
+	List b = Q.list;
+	List a = list;
+	
+	node *b2,*a1;
+	
+	LongInt sumTotal;
+	sumTotal.sign=true;
+	List total;
+	total.createNode(0);
+	if(greater(Q)){
+		b2 = b.getLast();
+		sumTotal.list=total;
+		while(b2!=NULL){
+			a1 = a.getLast();
+			bool first = true;
+			int zeroC =0;
+			int carry=0;
+			int multValue;
+			LongInt Sum;
+			List sumL;
+			while(a1!=NULL){
+				multValue = (b2->data * a1->data)+carry;
+				carry = overFlow(multValue);
+				if(first){
+					sumL.createNode(multValue);
+					first=false;
+				}
+				else{
+					sumL.insertLeft(multValue);
+				}
+				
+				a1 = b.nextLeft(a1);
+			}
+			if(carry!=0){
+				sumL.insertLeft(carry);
+				carry=0;
+			}
+			for(int i; i<zeroC; i++){
+				sumL.insertRight(0);
+			}
+			Sum.setSign(true);
+			Sum.list = sumL;
+			zeroC++;
+			sumTotal = sumTotal.add(Sum);
+			b2 = a.nextLeft(b2);
+			
+		}
+	}
+	//a<b
+	else{
+		a1 = a.getLast();
+		
+		sumTotal.list=total;
+		int zeroC =0;
+		while(a1!=NULL){
+			b2 = b.getLast();
+			bool first = true;
+			int carry=0;
+			int multValue;
+			LongInt Sum;
+			List sumL;
+			while(b2!=NULL){
+				multValue = (a1->data * b2->data)+carry;
+				carry = overFlow(multValue);
+				if(first){
+					sumL.createNode(multValue);
+					first=false;
+				}
+				else{
+					sumL.insertLeft(multValue);
+				}
+				
+				b2 = b.nextLeft(b2);
+			}
+			if(carry!=0){
+				sumL.insertLeft(carry);
+				carry=0;
+			}
+			for(int i=0;i<zeroC;i++){
+				sumL.insertRight(0);
+			}
+			Sum.setSign(true);
+			Sum.list = sumL;
+			sumTotal = sumTotal.add(Sum);
+			a1 = a.nextLeft(a1);
+			zeroC++;
+		}
+	}
+	if(getSign() == Q.getSign()){
+		if(getSign()){
+			sumTotal.setSign(true);
+		}
+		else{
+			sumTotal.setSign(false);
+		}
+	}
+	else{
+		sumTotal.setSign(false);
+	}
+	
+	return sumTotal;
 };
+/*
 //Raises the Long Integer to the power p and returns the result. NOTE: p is a normal integer.
 LongInt LongInt::power(int p){
 };
