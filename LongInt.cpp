@@ -856,6 +856,17 @@ LongInt LongInt::multiply(LongInt Q){
 	sumTotal.sign=true;
 	List total;
 	total.createNode(0);
+	if(a.getFirst()->data == 0 || b.getFirst()->data == 0){
+		sumTotal.list = total;
+	}
+	else if((a.getFirst() == a.getLast() && a.getFirst()->data == 1) || (b.getFirst() == b.getLast() && b.getFirst()->data == 1)){
+		if(a.getFirst()->data == 1){
+			sumTotal.list = b;
+		}
+		else{
+			sumTotal.list = a;
+		}
+	}
 	if(greater(Q)){
 		b2 = b.getLast();
 		sumTotal.list=total;
