@@ -8,7 +8,7 @@ using namespace std;
 struct node {
 	node *prev;
 	node *next;
-	long data;
+	int data;
 	
 	node()
 	{
