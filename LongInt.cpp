@@ -41,6 +41,16 @@ int LongInt::digits(int t){
 	return digits;
 }
 
+int LongInt::nodeCount(List Q){
+	int count=0;
+	node *tmp = Q.getFirst();
+	while(tmp!=NULL){
+		count++;
+		tmp = Q.nextRight(tmp);
+	}
+	return count;
+}
+
 //Initializes the Long Integer using a String S, which contains a number. S’scharacters are guaranteed to be digits, except the first character which may be a minus character.
 void LongInt::Initialize(string S){
 	int f = 1;
@@ -109,7 +119,7 @@ void LongInt::setSign(bool S){
 int LongInt::getDigitCount(){
 	int first=1;
 	int digits=0;
-	List a = LongInt::list;
+	List a = list;
 	node *tmp = a.Head;
 	while(tmp!=NULL){
 		if(first==1){
@@ -126,6 +136,8 @@ int LongInt::getDigitCount(){
 	}
 	return digits;
 }
+
+
 
 // Prints the Long Integer to standard output. The output format is defined as a sequence of digit characters. The first character may be a minus.
 string LongInt::Print(){
@@ -965,19 +977,37 @@ LongInt LongInt::power(int p){
 };*/
  //Divides the Long Integer by Q and returns the quotient portion of the result
 LongInt LongInt::divide(LongInt Q){
+	//distinguish dividend and divisor
 	List dividend = list;
 	List divisor = Q.list;
-	int divValue,subValue,ddnum,drnum;
+	//initiate vars
+	bool first = true;
+	int divValue,subValue,ddnum,drnum,zeroNodes,zeroCount;
 	node *dd,*dr;
-	
+	//get node count to see how many zeros needed to make
+	zeroNodes = (nodeCount(dividend))-1;
+	zeroCount = zeroNodes*4;
+	//make the list of zeros which will be used as the list to subtract from
+	List subList;
+	for(int i=0; i<zeroNodes; i++){
+		if(first){
+			subList.createNode(0);
+			first=false;
+		}
+		else{
+			subList.insertLeft(0);
+		}
+	}
+	//get first nodes
 	dd = dividend.getFirst();
 	dr = divisor.getFirst();
 	
+	//get the number from first node
 	ddnum = dd->data;
 	drnum = dr->data;
 	cout<<"dividend num is : "<<ddnum<<endl;
 	cout<<"divisor num is: "<<drnum<<endl;
-
+	//get digits of first node
 	int dddigits = digits(ddnum);
 	int drdigits = digits(drnum);
 	//check if first node data values are not equal to 4.
@@ -996,11 +1026,11 @@ LongInt LongInt::divide(LongInt Q){
 				
 			}
 			if(!divisor.isLast(dr) && drdigits!=4){
-				int nexnum;
-				node *nex;
-				nex = divisor.nextRight(dr);
-				nexnum = nex->data;
-				drnum = completeNum(ddnum, nexnum);
+				int drnexnum;
+				node *drnex;
+				drnex = divisor.nextRight(dr);
+				drnexnum = drnex->data;
+				drnum = completeNum(drnum, drnexnum);
 			}
 		}
 	}
@@ -1008,7 +1038,7 @@ LongInt LongInt::divide(LongInt Q){
 	cout<<"new ddnum is: "<<ddnum<<endl;
 	cout<<"new ddnum is: "<<drnum<<endl;
 	//both numbers are now four digits. Let's divide
-	//check if dividend is bigger
+	//first check if dividend is bigger
 	if(ddnum < drnum){
 		node *ddnext;
 		int ddnextnum;
@@ -1021,18 +1051,18 @@ LongInt LongInt::divide(LongInt Q){
 	subValue = divValue * drnum;
 	cout<<"divValue: "<<divValue<<endl;
 	cout<<"subValue: "<<subValue<<endl;
-	
-	List subtractList;
-	int over = overFlow(subValue);
-	subtractList.createNode(subValue);
-	if(over!=0){
-		subtractList.insertLeft(over);
+	//add subValue to subList
+	if(zeroCount%4==0){
+		int over = overFlow(subValue);
+		subList.insertLeft(subValue);
+		if(over!=0){
+			subList.insertLeft(over);
+		}
 	}
-	
-	
-	
-	
-	
+	//LongInt to use for subtraction
+	LongInt Sub;
+	Sub.list = subList;
+	LongInt Result = LongInt::subtract(Sub);
 	
 };
 

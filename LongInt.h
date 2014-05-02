@@ -12,6 +12,7 @@ class LongInt{
 		int digits(int t);
 		bool greater(LongInt Q);
 		int completeNum(int n, int x);
+		int nodeCount(List Q);
 		List list;
 	public:
 		
