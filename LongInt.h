@@ -11,6 +11,7 @@ class LongInt{
 		void stripz(string s);
 		int digits(int t);
 		bool greater(LongInt Q);
+		int completeNum(int n, int x);
 		List list;
 	public:
 		
