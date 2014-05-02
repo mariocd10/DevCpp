@@ -17,6 +17,30 @@ void LongInt::stripz(string s){
 	}
 }
 
+int LongInt::overFlow(int &T){
+	int digits =0;
+	int left, right;
+    int x = LongInt::digits(T);
+	if(x>4){
+		left = T/10000;
+		T = T%10000;
+		return left;
+	}
+	else{
+		return 0;
+	}
+}
+
+int LongInt::digits(int t){
+	int tmp = t;
+	int digits=0;
+    while(tmp>0){
+		tmp/=10;
+		digits+=1;
+	}
+	return digits;
+}
+
 //Initializes the Long Integer using a String S, which contains a number. S’scharacters are guaranteed to be digits, except the first character which may be a minus character.
 void LongInt::Initialize(string S){
 	int f = 1;
@@ -366,30 +390,6 @@ bool LongInt::equalTo(LongInt Q){
 	}
 
 };
-
-int LongInt::overFlow(int &T){
-	int digits =0;
-	int left, right;
-    int x = LongInt::digits(T);
-	if(x>4){
-		left = T/10000;
-		T = T%10000;
-		return left;
-	}
-	else{
-		return 0;
-	}
-}
-
-int LongInt::digits(int t){
-	int tmp = t;
-	int digits=0;
-    while(tmp>0){
-		tmp/=10;
-		digits+=1;
-	}
-	return digits;
-}
 
 //Adds Q to the Long Integer and returns the result
 
@@ -962,8 +962,109 @@ LongInt LongInt::multiply(LongInt Q){
 /*
 //Raises the Long Integer to the power p and returns the result. NOTE: p is a normal integer.
 LongInt LongInt::power(int p){
-};
+};*/
  //Divides the Long Integer by Q and returns the quotient portion of the result
 LongInt LongInt::divide(LongInt Q){
+	List dividend = list;
+	List divisor = Q.list;
+	int divValue,subValue,ddnum,drnum;
+	node *dd,*dr;
+	
+	dd = dividend.getFirst();
+	dr = divisor.getFirst();
+	
+	ddnum = dd->data;
+	drnum = dr->data;
+	cout<<"dividend num is : "<<ddnum<<endl;
+	cout<<"divisor num is: "<<drnum<<endl;
+
+	int dddigits = digits(ddnum);
+	int drdigits = digits(drnum);
+	//check if first node data values are not equal to 4.
+	//we want to get the first four digits of the number to divide
+	if(dddigits!=4 || drdigits!=4){
+		//now check if it's not the last node so we can take digits from the next node
+		if(!dividend.isLast(dd) || !divisor.isLast(dr)){
+			//check which one was broke the condition
+			if(!dividend.isLast(dd) && dddigits!=4){
+				int ddnexnum;
+				node *ddnex;
+				ddnex = dividend.nextRight(dd);
+				ddnexnum = ddnex->data;
+				//change the num to be four digits
+				ddnum = completeNum(ddnum, ddnexnum);
+				
+			}
+			if(!divisor.isLast(dr) && drdigits!=4){
+				int nexnum;
+				node *nex;
+				nex = divisor.nextRight(dr);
+				nexnum = nex->data;
+				drnum = completeNum(ddnum, nexnum);
+			}
+		}
+	}
+
+	cout<<"new ddnum is: "<<ddnum<<endl;
+	cout<<"new ddnum is: "<<drnum<<endl;
+	//both numbers are now four digits. Let's divide
+	//check if dividend is bigger
+	if(ddnum < drnum){
+		node *ddnext;
+		int ddnextnum;
+		ddnext = dividend.nextRight(dd);
+		ddnextnum = ddnext->data;
+		ddnum = completeNum(ddnum,ddnextnum);
+	}
+	//if not then divide
+	divValue = ddnum / drnum;
+	subValue = divValue * drnum;
+	cout<<"divValue: "<<divValue<<endl;
+	cout<<"subValue: "<<subValue<<endl;
+	
+	List subtractList;
+	int over = overFlow(subValue);
+	subtractList.createNode(subValue);
+	if(over!=0){
+		subtractList.insertLeft(over);
+	}
+	
+	
+	
+	
+	
+	
 };
-*/
+
+int LongInt::completeNum(int num, int nextnum){
+	int numdigits,newNum;
+	numdigits = digits(num);
+	switch (numdigits)
+	{
+		case 4:
+			while(nextnum>10){
+				nextnum/=10;
+			}
+			newNum = (num*10)+nextnum;
+			return newNum;
+		case 3:
+			while(nextnum>10){
+				nextnum/=10;
+			};
+			newNum = (num*10)+nextnum;
+			return newNum;
+		case 2:
+			while(nextnum>100){
+				nextnum/=10;
+			};
+			newNum = (num*100)+nextnum;
+			return newNum;
+		case 1:
+            while(nextnum>1000){
+				nextnum/=10;
+			};
+			newNum = (num*1000)+nextnum;
+		    return newNum;
+	}
+}
+
