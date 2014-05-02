@@ -728,7 +728,6 @@ LongInt LongInt::subtract(LongInt Q){
 	else{
 		//same sign
 		int borrow;
-		
 		if(equalTo(Q)){
 			c.createNode(0);
 			result.list = c;
@@ -804,7 +803,7 @@ LongInt LongInt::subtract(LongInt Q){
 			while(!a.isFirst(a1) && !b.isFirst(b2)){
 				a1 = a.nextLeft(a1);
 				b2 = b.nextLeft(b2);
-				if(b2->data < a1->data){
+				if(a1->data < b2->data){
 					subValue = ((a1->data - borrow) + 10000) - b2->data;
 					borrow = 1;
 					c.insertLeft(subValue);
