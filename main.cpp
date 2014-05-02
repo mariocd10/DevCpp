@@ -34,7 +34,7 @@ int main(){
 	cout<<"Number AX is: "<<AX.Print()<<endl;
 	cout<<"Number AZ is: "<<AZ.Print()<<endl;
     cout<<"----------------------------------------------------"<<endl;
-	//Print Digits
+	/*Print Digits
 	int digita = A.getDigitCount();
     int digitb = B.getDigitCount();
     int digitc = C.getDigitCount();
@@ -158,6 +158,7 @@ int main(){
     cout<<"Before overFlow: "<<v<<endl;
     A.overFlow(v);
     cout<<"New Value of v after overFlow is: "<<v<<endl;
+
  	//Add
  	cout<<"----------------------------------------------------"<<endl;
  	LongInt E = A.add(D);
@@ -172,10 +173,7 @@ int main(){
 	cout<<"A+E = I: "<<I.Print()<<endl;
 	LongInt J = B.add(G);
 	cout<<"B+G = J: "<<J.Print()<<endl;
-	
 	cout<<"----------------------------------------------------"<<endl;
-	
-	
 	LongInt K = A.subtract(D);
 	cout<<"A-D = K: "<<K.Print()<<endl;
 	LongInt L = C.subtract(D);
@@ -188,7 +186,6 @@ int main(){
 	cout<<"L-K = O: "<<O.Print()<<endl;
 	LongInt P = J.subtract(M);
 	cout<<"J-M = P: "<<P.Print()<<endl;
-	
 	cout<<"----------------------------------------------------"<<endl;
 	LongInt Q = A.multiply(D);
 	cout<<"A*D = Q: "<<Q.Print()<<endl;
@@ -203,6 +200,10 @@ int main(){
 	LongInt V = I.multiply(J);
 	cout<<"I*J = V: "<<V.Print()<<endl;
 	cout<<"----------------------------------------------------"<<endl;
+	*/
+	
+	cout<<"B/A"<<endl;
+	B.divide(A);
 	
 	system("PAUSE");
 	return 0;
