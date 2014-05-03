@@ -204,8 +204,8 @@ int main(){
 	
 	cout<<"B/A"<<endl;
 	LongInt Z = B.divide(A);
-	cout<<"Z: "<<Z.Print();
-	
+	cout<<"Z: "<<Z.Print()<<endl;
+
 	system("PAUSE");
 	return 0;
 }

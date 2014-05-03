@@ -1003,11 +1003,29 @@ LongInt LongInt::multiply(LongInt Q){
 	
 	return sumTotal;
 };
-/*
+
 //Raises the Long Integer to the power p and returns the result. NOTE: p is a normal integer.
 LongInt LongInt::power(int p){
-};*/
- //Divides the Long Integer by Q and returns the quotient portion of the result
+	LongInt RESULT;
+	List x = RESULT.list;
+    if (p==0){
+		x.createNode(1);
+		return RESULT;
+	}
+	if(p==1){
+		RESULT.list = list;
+		return RESULT;
+	}
+	cout<<"power"<<endl;
+	RESULT.list = list;
+	for(int i=1; i<p; i++){
+		RESULT = RESULT.multiply(RESULT);
+	}
+	RESULT.sign = true;
+	return RESULT;
+};
+
+//Divides the Long Integer by Q and returns the quotient portion of the result
 LongInt LongInt::divide(LongInt Q){
 	//will be used for the checks if greater than divisor and subtraction from dividend
 	List Odividend = list;
@@ -1018,6 +1036,7 @@ LongInt LongInt::divide(LongInt Q){
 	int divValue,subValue;
 	int ddnum,drnum;
 	int zeroNodes,zeroCount;
+	int numNodes, firstNode;
 	int divTotal =0;
 	node *dd,*dr;
 	LongInt RESULT;
@@ -1041,23 +1060,16 @@ LongInt LongInt::divide(LongInt Q){
 		return RESULT;
 	}
 	//make the list of zeros which will be used as the list to subtract from
-	List subList;
-	for(int i=0; i<zeroNodes; i++){
-		if(first){
-			subList.createNode(0);
-			first=false;
-		}
-		else{
-			subList.insertLeft(0);
-		}
-	}
 	
+
 	//grab list of original dividend
 	List dividend = Odividend;
 	LongInt Dividend;
+	Dividend.sign=true;
 	Dividend.list = dividend;
 	//do the first division then continue
 	do{
+		cout<<"do Loop"<<endl;
 		//get first nodes
 		dd = dividend.getFirst();
 		dr = divisor.getFirst();
@@ -1068,12 +1080,15 @@ LongInt LongInt::divide(LongInt Q){
 		//get digits of first node
 		int dddigits = digits(ddnum);
 		int drdigits = digits(drnum);
+		
+		//display data to make sure it's right
+		cout<<"ddnum: "<<ddnum<<endl<<"drnum: "<<drnum<<endl<<"dddigits: "<<dddigits<<endl<<"drdigits: "<<drdigits<<endl;
 		//check if first node data values are not equal to 4.
 		//we want to get the first four digits of the number to divide
 		if(dddigits!=4 || drdigits!=4){
 			//now check if it's not the last node so we can take digits from the next node
 			if(!dividend.isLast(dd) || !divisor.isLast(dr)){
-				//check which one was broke the condition
+				//check which one broke the condition
 				if(!dividend.isLast(dd) && dddigits!=4){
 					int ddnexnum;
 					node *ddnex;
@@ -1101,68 +1116,91 @@ LongInt LongInt::divide(LongInt Q){
 			ddnextnum = ddnext->data;
 			ddnum = completeNum(ddnum,ddnextnum);
 		}
+		cout<<"about to divide: "<<endl;
 		//if not then divide
 		divValue = ddnum / drnum;
 		subValue = divValue * drnum;
 		int over;
+		
+		cout<<"divValue: "<<divValue<<endl<<"subValue: "<<subValue<<endl;
 		//add subValue to subList
-		if(zeroCount%4==0){
-			//if the zero count is multiple of four means i can create a new node to put the number
+		cout<<"zeroCount: "<<zeroCount<<endl;
+		List subList;
+		numNodes = zeroCount/4;
+		firstNode = zeroCount%4;
+		//create subList
+		for(int i=0; i<numNodes; i++){
+			//create nodes full of zeros
+			if(first){
+				subList.createNode(0);
+				first=false;
+				}
+			else{
+				subList.insertLeft(0);
+			}
+		}
+		//check if the remainder is 0 then insert new node
+		if(firstNode==0){
 			over = overFlow(subValue);
 			subList.insertLeft(subValue);
 			if(over!=0){
 				subList.insertLeft(over);
 			}
-			zeroCount--;
+			zeroCount-=1;
 		}
 		//else zeroCount says the padding is decreasing
 		else{
-			int remainder;
-			int rem = zeroCount%4;
+			int cutoff,insertValue;
 			node *fnode = subList.getFirst();
-            switch (rem)
+            switch (firstNode)
 			{
 				case 1:
-					remainder = subValue%10;
-					subValue /=10;
-					fnode->data = remainder*1000;
-					do{
-						over = overFlow(subValue);
-						subList.insertLeft(subValue);
-						subValue = over;
-					}while(subValue!=0);
+                    cutoff = subValue%1000;
+					subValue /=1000;
+					insertValue = cutoff*10;
+					subList.insertLeft(insertValue);
+				    do{
+				    	over = overFlow(subValue);
+			        	subList.insertLeft(subValue);
+				    	subValue = over;
+				    }while(subValue!=0);
 					zeroCount--;
 					break;
 				case 2:
-					remainder = subValue%100;
+					cutoff = subValue%100;
 					subValue /=100;
-					fnode->data = remainder*100;
-					do{
-						over = overFlow(subValue);
-						subList.insertLeft(subValue);
-						subValue = over;
-					}while(subValue!=0);
+					insertValue = cutoff*100;
+					subList.insertLeft(insertValue);
+				    do{
+				    	over = overFlow(subValue);
+			        	subList.insertLeft(subValue);
+				    	subValue = over;
+				    }while(subValue!=0);
 					zeroCount--;
 					break;
 				case 3:
-					remainder = subValue%1000;
-					subValue /=1000;
-					fnode->data = remainder*10;
-					do{
-						over = overFlow(subValue);
-						subList.insertLeft(subValue);
-						subValue = over;
-					}while(subValue!=0);
+					cutoff = subValue%10;
+					subValue /=10;
+					insertValue = cutoff*1000;
+					subList.insertLeft(insertValue);
+				    do{
+				    	over = overFlow(subValue);
+			        	subList.insertLeft(subValue);
+				    	subValue = over;
+				    }while(subValue!=0);
 					zeroCount--;
 					break;
 			}
 		}
+		
   		//if subList >
 		//LongInt to use for subtraction
 		LongInt Sub;
 		Sub.list = subList;
 		Sub.sign = true;
-		if(Sub.lessThan(Dividend)){
+		cout<<"subtract long int: "<<Sub.Print()<<endl<<"dividend: "<<Dividend.Print()<<endl;
+		cout<<endl;
+		if(!Sub.greater(Dividend)){
 			//Result after subtraction
 			LongInt TmpResult = Dividend.subtract(Sub);
 			dividend = TmpResult.list;
@@ -1180,7 +1218,7 @@ LongInt LongInt::divide(LongInt Q){
 		else{
 			divTotal = divTotal*10;
 		}
-	}while(Dividend.greater(Q));
+	}while(Dividend.greaterThan(Q));
 	
 	//create a list of the divTotal int
 	int overF;
