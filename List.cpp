@@ -11,8 +11,14 @@ void List::traverse(){
 	node *tmp = Head;
 	
 	while(tmp != NULL){
-		cout<<tmp->data<<"-";
-		tmp = tmp->next;
+		if(tmp->next == NULL){
+			cout<<tmp->data;
+			tmp = tmp->next;
+		}
+		else{
+			cout<<tmp->data<<"-";
+			tmp = tmp->next;
+		}
 	}
 	return;
 
