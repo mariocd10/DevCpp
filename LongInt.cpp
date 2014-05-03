@@ -977,15 +977,19 @@ LongInt LongInt::power(int p){
 };*/
  //Divides the Long Integer by Q and returns the quotient portion of the result
 LongInt LongInt::divide(LongInt Q){
-	//distinguish dividend and divisor
-	List dividend = list;
+	//will be used for the checks if greater than divisor and subtraction from dividend
+	List Odividend = list;
 	List divisor = Q.list;
 	//initiate vars
 	bool first = true;
-	int divValue,subValue,ddnum,drnum,zeroNodes,zeroCount;
+	bool fdigit = true;
+	int divValue,subValue;
+	int ddnum,drnum;
+	int zeroNodes,zeroCount;
+	int divTotal =0;
 	node *dd,*dr;
 	//get node count to see how many zeros needed to make
-	zeroNodes = (nodeCount(dividend))-1;
+	zeroNodes = (nodeCount(Odividend))-1;
 	zeroCount = zeroNodes*4;
 	//make the list of zeros which will be used as the list to subtract from
 	List subList;
@@ -998,71 +1002,91 @@ LongInt LongInt::divide(LongInt Q){
 			subList.insertLeft(0);
 		}
 	}
-	//get first nodes
-	dd = dividend.getFirst();
-	dr = divisor.getFirst();
-	
-	//get the number from first node
-	ddnum = dd->data;
-	drnum = dr->data;
-	cout<<"dividend num is : "<<ddnum<<endl;
-	cout<<"divisor num is: "<<drnum<<endl;
-	//get digits of first node
-	int dddigits = digits(ddnum);
-	int drdigits = digits(drnum);
-	//check if first node data values are not equal to 4.
-	//we want to get the first four digits of the number to divide
-	if(dddigits!=4 || drdigits!=4){
-		//now check if it's not the last node so we can take digits from the next node
-		if(!dividend.isLast(dd) || !divisor.isLast(dr)){
-			//check which one was broke the condition
-			if(!dividend.isLast(dd) && dddigits!=4){
-				int ddnexnum;
-				node *ddnex;
-				ddnex = dividend.nextRight(dd);
-				ddnexnum = ddnex->data;
-				//change the num to be four digits
-				ddnum = completeNum(ddnum, ddnexnum);
-				
-			}
-			if(!divisor.isLast(dr) && drdigits!=4){
-				int drnexnum;
-				node *drnex;
-				drnex = divisor.nextRight(dr);
-				drnexnum = drnex->data;
-				drnum = completeNum(drnum, drnexnum);
+	//do the first division then continue 
+	List dividend = list;
+	LongInt Dividend;
+	do{
+		//get first nodes
+		dd = dividend.getFirst();
+		dr = divisor.getFirst();
+		
+		//get the number from first node
+		ddnum = dd->data;
+		drnum = dr->data;
+		cout<<"dividend num is : "<<ddnum<<endl;
+		cout<<"divisor num is: "<<drnum<<endl;
+		//get digits of first node
+		int dddigits = digits(ddnum);
+		int drdigits = digits(drnum);
+		//check if first node data values are not equal to 4.
+		//we want to get the first four digits of the number to divide
+		if(dddigits!=4 || drdigits!=4){
+			//now check if it's not the last node so we can take digits from the next node
+			if(!dividend.isLast(dd) || !divisor.isLast(dr)){
+				//check which one was broke the condition
+				if(!dividend.isLast(dd) && dddigits!=4){
+					int ddnexnum;
+					node *ddnex;
+					ddnex = dividend.nextRight(dd);
+					ddnexnum = ddnex->data;
+					//change the num to be four digits
+					ddnum = completeNum(ddnum, ddnexnum);
+					
+				}
+				if(!divisor.isLast(dr) && drdigits!=4){
+					int drnexnum;
+					node *drnex;
+					drnex = divisor.nextRight(dr);
+					drnexnum = drnex->data;
+					drnum = completeNum(drnum, drnexnum);
+				}
 			}
 		}
-	}
-
-	cout<<"new ddnum is: "<<ddnum<<endl;
-	cout<<"new ddnum is: "<<drnum<<endl;
-	//both numbers are now four digits. Let's divide
-	//first check if dividend is bigger
-	if(ddnum < drnum){
-		node *ddnext;
-		int ddnextnum;
-		ddnext = dividend.nextRight(dd);
-		ddnextnum = ddnext->data;
-		ddnum = completeNum(ddnum,ddnextnum);
-	}
-	//if not then divide
-	divValue = ddnum / drnum;
-	subValue = divValue * drnum;
-	cout<<"divValue: "<<divValue<<endl;
-	cout<<"subValue: "<<subValue<<endl;
-	//add subValue to subList
-	if(zeroCount%4==0){
-		int over = overFlow(subValue);
-		subList.insertLeft(subValue);
-		if(over!=0){
-			subList.insertLeft(over);
+		//both numbers are now four digits. Let's divide
+		//first check if dividend is bigger
+		if(ddnum < drnum){
+			node *ddnext;
+			int ddnextnum;
+			ddnext = dividend.nextRight(dd);
+			ddnextnum = ddnext->data;
+			ddnum = completeNum(ddnum,ddnextnum);
 		}
-	}
-	//LongInt to use for subtraction
-	LongInt Sub;
-	Sub.list = subList;
-	LongInt Result = LongInt::subtract(Sub);
+		//if not then divide
+		divValue = ddnum / drnum;
+		subValue = divValue * drnum;
+		//add subValue to subList
+		if(zeroCount%4==0){
+			int over = overFlow(subValue);
+			subList.insertLeft(subValue);
+			if(over!=0){
+				subList.insertLeft(over);
+			}
+		}
+		//LongInt to use for subtraction
+		LongInt Sub;
+		Sub.list = subList;
+		Sub.sign = true;
+		//Result after subtraction
+		LongInt Result = LongInt::subtract(Sub);
+		Result.sign = true;
+		//Reassign dividend list
+		dividend = Result.list;
+		//Reassign Dividend LongInt to compare against the divisor
+		Dividend = Result;
+		//add divValue to divTotal
+		if(fdigit){
+			divTotal+= divValue;
+			fdigit=false;
+		}
+		else{
+			divTotal = (divTotal*10) + divValue;
+		}
+	}while(Dividend.greater(Q));
+	//create a list of the divTotal int
+	while
+	overF = overFlow(divTotal)
+	createNode(divTotal);
+	divTotal = overF;
 	
 };
 
