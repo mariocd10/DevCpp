@@ -153,12 +153,14 @@ int main(){
     cout<<"AZ equalTo D: "<<AZ.equalTo(D)<<endl;
     cout<<"AZ equalTo AX: "<<AZ.equalTo(AX)<<endl;
     cout<<"AZ equalTo AZ: "<<AZ.equalTo(AZ)<<endl;
+    */
     //Overflow
-    int v = 112345;
+    int v = 117862345;
     cout<<"Before overFlow: "<<v<<endl;
-    A.overFlow(v);
+    int over = A.overFlow(v);
     cout<<"New Value of v after overFlow is: "<<v<<endl;
-
+    cout<<over<<endl;
+	/*
  	//Add
  	cout<<"----------------------------------------------------"<<endl;
  	LongInt E = A.add(D);
@@ -200,10 +202,10 @@ int main(){
 	LongInt V = I.multiply(J);
 	cout<<"I*J = V: "<<V.Print()<<endl;
 	cout<<"----------------------------------------------------"<<endl;
-	*/
+	
 	
 	cout<<"B/A"<<endl;
-	B.divide(A);
+	B.divide(A);*/
 	
 	system("PAUSE");
 	return 0;
