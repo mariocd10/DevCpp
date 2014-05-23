@@ -1006,189 +1006,232 @@ LongInt LongInt::multiply(LongInt Q){
 
 //Raises the Long Integer to the power p and returns the result. NOTE: p is a normal integer.
 LongInt LongInt::power(int p){
-	LongInt RESULT;
-	List x = RESULT.list;
-    if (p==0){
-		x.createNode(1);
-		return RESULT;
+	LongInt tmp;
+	tmp.list = list;
+	tmp.sign = getSign();
+	
+	LongInt answer;
+	LongInt num;
+	num.list = list;
+	num.sign = sign;
+	
+	answer.list.createNode(1);
+	answer.setSign(true);
+	
+	if(p == 0)
+			return answer;
+	if(!getSign())
+		{
+		if(p%2 == 1)
+		{
+			answer.setSign(false);
+		}
+		else
+		{
+			answer.setSign(true);
+		}
 	}
-	if(p==1){
-		RESULT.list = list;
-		return RESULT;
+		
+	if( p == 1)
+		return tmp;
+	else if(p==2)
+	{
+		answer = multiply(tmp);
+		return answer;
 	}
-	cout<<"power"<<endl;
-	RESULT.list = list;
-	for(int i=1; i<p; i++){
-		RESULT = RESULT.multiply(RESULT);
+	else
+	{
+	   while (p > 0)
+	   {
+	        if (p % 2 == 0) 
+	        {
+	        } 
+	        else 
+	        {
+	        	answer = answer.multiply(num);
+	            p--;
+	        }
+	        num = num.multiply(num);
+	        p /= 2;
+        }
+	   return answer;
 	}
-	RESULT.sign = true;
-	return RESULT;
+		
 };
 
 //Divides the Long Integer by Q and returns the quotient portion of the result
 LongInt LongInt::divide(LongInt Q){
-	//will be used for the checks if greater than divisor and subtraction from dividend
-	List Odividend = list;
-	List divisor = Q.list;
-	//initiate vars
-	bool first = true;
-	bool fdigit = true;
-	int divValue,subValue;
-	int ddnum,drnum;
-	int zeroNodes,zeroCount;
-	int numNodes, firstNode;
-	int divTotal =0;
-	node *dd,*dr;
-	LongInt RESULT;
+	//
+	int iteration = getDigitCount() - Q.getDigitCount();//number to check the 0's
+	String quo = "";
+	LongInt newDividend;
 	
-	LongInt Zero;
-	Zero.sign = true;
-	Zero.list.createNode(10);
+	int digitQSize = Q.getDigitCount();
+	LongInt finalQuotient;
+	if ((getSign() && !Q.getSign()) || (!getSign() && Q.getSign())){
+		newDivident.setSign(false);
+	}
 	
-	//get node count to see how many zeros needed to make
-	zeroCount = getDigitCount() - Q.getDigitCount();
-	cout<<"zeroCount for real: "<<zeroCount<<endl;
-	//Special Cases
-	//when dividing by 0 and by 1 and by itself
-	node *y = divisor.getFirst();
-	if(equalTo(Q)){
-		RESULT.list.createNode(1);
-		return RESULT;
-	}
-	else if(divisor.isLast(y) && y->data == 1){
-		RESULT.list = Odividend;
-		return RESULT;
-	}
-	else if(divisor.isLast(y) && y->data == 0){
-		RESULT.list.createNode(0);
-		return RESULT;
-	}
-	//grab list of original dividend
-	List dividend = Odividend;
-	LongInt Dividend;
-	//do the first division then continue
-	do{
-		cout<<"do Loop"<<endl;
-		//get first nodes
-		dd = dividend.getFirst();
-		dr = divisor.getFirst();
+	setSign(true);
+	Q.setSign(true);
+	node *aVal = list.getFirst();
+	node *qVal = Q.list.getFirst();
+
+	if (Q.greater(this)) 
+	{
+		finalQuotient.list.insertLeft(0);
+		return finalQuotient;
+	} 
+	else if (Q.equal(this)) 
+	{
+		finalQuotient.long_num.insertLeft(1);
+		return finalQuotient;
+	} 
+	else if ((this.list.isFirst(aVal) && this.list.isLast(aVal))&& (Q.list.isFirst(qVal) && Q.list.isLast(qVal))) {
+		int div = aVal.getValue() / qVal.getValue();
+		finalQuotient.list.insertLeft(div);
+		return finalQuotient;
+
+	} 
+	else if (Q.getDigitCount() < 4) 
+	{
+
+		int first_4or5_of_a;
+		LongInt quotient;
+		LongInt times10;
+		LongInt newDiv2;
+
+		newDividend = this;
+
+		times10.initialize("10");
+		int q;
+		qVal = Q.list.getFirst();
+		LongInt qMult;
+		int first4ofq;
+		first4ofq = qVal->data;
 		
-		//get the number from first node
-		ddnum = dd->data;
-		drnum = dr->data;
-		//get digits of first node
-		int dddigits = digits(ddnum);
-		int drdigits = digits(drnum);
-		
-		//display data to make sure it's right
-		cout<<"dddigits: "<<dddigits<<endl<<"drdigits: "<<drdigits<<endl;
-		//check if first node data values are not equal to 4.
-		//we want to get the first four digits of the number to divide
-		if(dddigits!=4 || drdigits!=4){
-			//now check if it's not the last node so we can take digits from the next node
-			if(!dividend.isLast(dd) || !divisor.isLast(dr)){
-				//check which one broke the condition
-				if(!dividend.isLast(dd) && dddigits!=4){
-					int ddnexnum;
-					node *ddnex;
-					ddnex = dividend.nextRight(dd);
-					ddnexnum = ddnex->data;
-					//change the num to be four digits
-					ddnum = completeNum(ddnum, ddnexnum);
-					
+		while (Q.lessThan(newDividend)) {
+			cout<<Q.Print()<<endl;
+			newDividend.Print();
+			aVal = newDividend.list.getFirst();
+			first4or5ofa = this.OFF_BY(aVal,
+					new_divident.getDigitCount() % 4, Q.getDigitCount()).getValue();
+			cout<<first_4or5_of_a;
+			if (first4ofq > first4or5ofa)
+			{
+				first4or5ofa = OFF_BY(new_divident.long_num.GET_FIRST(),new_divident.GETDIGITCOUNT() % 4, Q.GETDIGITCOUNT() + 1).getValue();
+
+			}
+			cout<<endl;
+			cout<<first_4or5_of_a);
+				
+			q = first_4or5_of_a / first_4_of_q;// finding the quotient
+			System.out.println(q);
+			LongInt quotient_by_one;
+			quotient.list.insertRight(q);
+
+			quotient_by_one.list.insertRight(q);
+
+			qMult = Q.multiply(quotient_by_one);
+
+			newdiv2 = qMult;
+
+			for (int i = 0; i < iteration; i++) {
+
+				qMult = qMult.multiply(times10);
+
+			}
+			iteration--;
+			
+			while (qMult.greaterThan(new_divident)) {
+			
+				quo = quo + "0";
+				q_mult = newdiv2;
+				for (int i = 0; i < iteration; i++) {
+
+					qMult = qMult.multiply(times_10);
+
 				}
-				if(!divisor.isLast(dr) && drdigits!=4){
-					int drnexnum;
-					node *drnex;
-					drnex = divisor.nextRight(dr);
-					drnexnum = drnex->data;
-					drnum = completeNum(drnum, drnexnum);
+				iteration--;
+			}
+
+			quo = quo + q;
+			System.out.println(quo);
+			newDividend = newDividend.subtract(qMult);
+
+		}
+
+		finalQuotient.initialize(quo);
+		return finalQuotient;
+	}
+
+	else {
+
+		int first_4or5_of_a;
+		Long_Integer_ADT quotient;
+		Long_Integer_ADT times10;
+		Long_Integer_ADT newdiv2;
+
+		new_divident = this;
+
+		times10.initialize("10");
+		int q;
+
+		LongInt qMult;
+		int first_4_of_q;
+		while (Q.lessThan(newDividend)) {
+
+			aVal = newDividend.list.getFirst();
+
+			qVal = Q.list.getFirst();
+
+			first_4or5_of_a = this.OFF_BY(a_val,
+					newDividend.getDigitCount() % 4, 4).getValue();
+
+			first_4_of_q = this.OFF_BY(q_val, digitQSize % 4, 4).getValue();
+
+			if (first_4_of_q > first_4or5_of_a)// add one more digit if Q
+												// first 4 digits is higher
+												// than the this 4 digits
+			{
+				first_4or5_of_a = this.OFF_BY(
+						newDividend.long_num.getFirst(),
+						newDividend.getDigitCount() % 4, 5).getValue();
+
+			}
+
+			q = first_4or5_of_a / first_4_of_q;// finding the quotient
+
+			LongInt quotient_by_one;
+			quotient.list.insertRight(q);
+
+			quotient_by_one.list.insertRight(q);
+
+			q_mult = Q.multiply(quotient_by_one);
+
+			newdiv2 = qMult;
+
+			for (int i = 0; i < iteration; i++) {
+
+				qMult = qMult.multiply(times10);
+			}
+			iteration--;
+			while (qMult.greaterThan(newDividend)) {
+				quo = quo + "0";
+				qMult = newdiv2;
+				for (int i = 0; i < iteration; i++) {
+					qMult = qMult.multiply(times10);
 				}
+				iteration--;
 			}
+			quo = quo + q;
+
+			newDividend = newDividend.subtract(qMult);
+
 		}
-		//both numbers are now four digits. Let's divide
-		//first check if dividend is bigger
-		if(ddnum < drnum){
-			node *ddnext;
-			int ddnextnum;
-			ddnext = dividend.nextRight(dd);
-			ddnextnum = ddnext->data;
-			ddnum = completeNum(ddnum,ddnextnum);
-		}
-		cout<<"ddnum: "<<ddnum<<endl<<"drnum: "<<drnum<<endl;
-		cout<<"about to divide: "<<endl;
-		//if not then divide
-		divValue = ddnum / drnum;
-		subValue = divValue * drnum;
-		cout<<"divValue: "<<divValue<<endl<<"subValue: "<<subValue<<endl;
-		//create a LongInt of subValue & LongInt of int 10
-		LongInt SubValue;
-		SubValue.sign=true;
-		List subList;
-		int over;
-		do{
-   			over = overFlow(subValue);
-			if(first){
-				subList.createNode(subValue);
-				first=false;
-			}
-			else{
-				subList.insertLeft(subValue);
-			}
-			subValue=over;
-		}while(subValue!=0);
-		SubValue.list = subList;
-		//for as many zeros we need. multiply
-		cout<<"created SubValue with subValue: "<<SubValue.Print();
-		cout<<"before making SubValue: "<<zeroCount<<endl;
-		for(int i=0; i<zeroCount; i++){
-			SubValue = SubValue.multiply(Zero);
-		}
-		zeroCount=zeroCount-1;
-		
-		cout<<"SubValue after inserting 0's: "<<SubValue.Print()<<endl;
-  		
-		//Dividend.list=dividend;
-		Dividend.sign=true;
-		if(SubValue.lessThan(Dividend)){
-			//Result after subtraction
-			LongInt TmpResult = Dividend.subtract(SubValue);
-			dividend = TmpResult.list;
-			TmpResult.sign = true;
-			Dividend = TmpResult;
-			//add divValue to divTotal
-			if(fdigit){
-				divTotal+= divValue;
-				fdigit=false;
-			}
-			else{
-				divTotal = (divTotal*10) + divValue;
-			}
-		}
-		else{
-			divTotal = divTotal*10;
-		}
-		cout<<"new Dividend: "<<Dividend.Print()<<endl;
-		cout<<"Q: "<<Q.Print()<<endl;
-	}while(Dividend.greaterThan(Q));
-	
-	//create a list of the divTotal int
-	int overF;
-	List x = RESULT.list;
-	do{
-		overF = overFlow(divTotal);
-		if(fdigit){
-			x.createNode(divTotal);
-			divTotal = overF;
-			fdigit=false;
-		}
-		else{
-			x.insertLeft(divTotal);
-			divTotal = overF;
-		}
-	}while(divTotal!=0);
-	
-	return RESULT;
+		finalQuotient.initialize(quo);
+		return finalQuotient;
+	}
 };
 
 
